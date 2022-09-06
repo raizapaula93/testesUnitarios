@@ -11,7 +11,11 @@ import static org.junit.Assert.assertTrue;
 import java.util.Date;
 
 import org.hamcrest.CoreMatchers;
+import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Assert;
+import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ErrorCollector;
@@ -26,40 +30,65 @@ import br.ce.wcaquino.utils.DataUtils;
 
 public class LocacaoServiceTest {
 	
+	private LocacaoService service;
 	
+	private static int contador = 0;//funciona pra deixar a variável no escopo da classe, então o teste não inicializará varias vezes a msm variável
 	
 	@Rule
 	public ErrorCollector error = new ErrorCollector();//checa toda a a pilha de erros
 	
 	@Rule
 	public ExpectedException exception = ExpectedException.none();
-		
-	@Test //sinaliza para o framework que o método abaixo é um teste
 	
-	public void testeLocacao () throws Exception {//deixar um cursor em cima de um teste somente o executa
-		//Se o teste não estiver esperando uma exception, deixe o JUnit gerenciar
-		//cenário - inicializar as variáveis
-		LocacaoService service = new LocacaoService();
+	@Before
+	public void setup() {
+		System.out.println("Before");
+		service = new LocacaoService();
+		contador++;
+		System.out.println(contador);
+	}
+	
+	@After
+	public void tearDown() {
+		System.out.println("After");
+	}
+	
+	@BeforeClass //inicia a classe antes de todos
+	public static void setupClass() {
+		System.out.println("Before Class");
+		
+	}
+	
+	@AfterClass //deixa esse processo por último
+	public static void tearDownClass() {
+		System.out.println("After Class");
+	}
+	
+		
+	@Test 
+	
+	public void testeLocacao () throws Exception {
+		
+		
+		//cenario
 		Usuario usuario = new Usuario("Usuário 1");
 		Filme filme = new Filme("Filme 1",2,5.0);
 		
 		//ação
-		Locacao locacao;
+		Locacao locacao = service.alugarFilme(usuario, filme);
 		
-			locacao = service.alugarFilme(usuario, filme);
-			//verificação
-			error.checkThat(locacao.getValor(),is(equalTo(5.0)));
-			error.checkThat(isMesmaData(locacao.getDataLocacao(),new Date()), is(true));
-			error.checkThat(isMesmaData(locacao.getDataRetorno(),DataUtils.obterDataComDiferencaDias(1)), is(true));
+		//verificação
+		error.checkThat(locacao.getValor(),is(equalTo(5.0)));
+		error.checkThat(isMesmaData(locacao.getDataLocacao(),new Date()), is(true));
+		error.checkThat(isMesmaData(locacao.getDataRetorno(),DataUtils.obterDataComDiferencaDias(1)), is(true));
 
 		
 	}
 	
-	@Test(expected=FilmeSemEstoqueException.class) //solução elegante -> Se estou esperando um exception, sinalizo para o Junit controlar
+	@Test(expected=FilmeSemEstoqueException.class) 
 	
 	public void testeLocacao_filmeSemEstoque () throws Exception {
 		//cenário
-		LocacaoService service = new LocacaoService();
 		Usuario usuario = new Usuario("Usuário 1");
 		Filme filme = new Filme("Filme 1",0,5.0);
 		
@@ -71,7 +100,7 @@ public class LocacaoServiceTest {
 	@Test
 	public void testLocacao_usuarioVazio() throws FilmeSemEstoqueException {
 		//cenario
-		LocacaoService service = new LocacaoService();
+
 		Filme filme = new Filme("Filme 2",1,4.0);
 		Usuario usuario = new Usuario("Usuário 1");
 		//acao
@@ -81,14 +110,14 @@ public class LocacaoServiceTest {
 		} catch(LocadoraException e) {
 			assertThat(e.getMessage(), is("Usuário vazio"));;
 		}
-		System.out.println("Forma robusta");
+	
 	}
 	
 	@Test
 	
 	public void testLocacao_FilmeVazio() throws LocadoraException, FilmeSemEstoqueException {
 		//cenário
-		LocacaoService service = new LocacaoService();
+		
 		Usuario usuario = new Usuario("Usuário 1");
 		
 		
