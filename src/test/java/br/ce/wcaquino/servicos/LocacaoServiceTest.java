@@ -32,8 +32,7 @@ public class LocacaoServiceTest {
 	
 	private LocacaoService service;
 	
-	private static int contador = 0;//funciona pra deixar a variável no escopo da classe, então o teste não inicializará varias vezes a msm variável
-	
+		
 	@Rule
 	public ErrorCollector error = new ErrorCollector();//checa toda a a pilha de erros
 	
@@ -42,29 +41,10 @@ public class LocacaoServiceTest {
 	
 	@Before
 	public void setup() {
-		System.out.println("Before");
 		service = new LocacaoService();
-		contador++;
-		System.out.println(contador);
-	}
-	
-	@After
-	public void tearDown() {
-		System.out.println("After");
-	}
-	
-	@BeforeClass //inicia a classe antes de todos
-	public static void setupClass() {
-		System.out.println("Before Class");
 		
 	}
-	
-	@AfterClass //deixa esse processo por último
-	public static void tearDownClass() {
-		System.out.println("After Class");
-	}
-	
-		
+			
 	@Test 
 	
 	public void testeLocacao () throws Exception {
@@ -126,7 +106,7 @@ public class LocacaoServiceTest {
 		exception.expectMessage("Filme vazio");
 		//acao
 		service.alugarFilme(usuario, null);
-		System.out.println("Forma nova");
+		
 	}
 		
 }
