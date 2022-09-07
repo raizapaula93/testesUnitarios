@@ -1,4 +1,4 @@
-package br.ce.wcaquino.servicos;
+package defaultTest;
 
 import org.junit.Assert;
 import org.junit.Test;

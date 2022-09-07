@@ -1,4 +1,4 @@
-package br.ce.wcaquino.servicos;
+package defaultTest;
 
 import static org.junit.Assert.assertEquals;
 
